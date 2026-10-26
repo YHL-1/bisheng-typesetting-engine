@@ -1,33 +1,34 @@
 import { useEffect, useRef } from "react";
-import { drawSingleLine } from "@typesetting-engine/render-canvas";
-import type { CanvasMetrics, DrawStats } from "@typesetting-engine/render-canvas";
-import type { LayoutOptions } from "@typesetting-engine/core";
+import { drawLayout } from "@typesetting-engine/render-canvas";
+import type { DrawStats } from "@typesetting-engine/render-canvas";
+import type { LayoutOptions, LayoutResult } from "@typesetting-engine/core";
 
 type Props = {
-  text: string;
+  layout: LayoutResult | null;
   options: LayoutOptions;
-  metrics: CanvasMetrics | null;
   height: number;
   redrawKey: number;
-  onRender: (stats: DrawStats, metrics: CanvasMetrics) => void;
+  showGlyphWidths: boolean;
+  onRender: (stats: DrawStats) => void;
 };
 
 export function PreviewCanvas({
-  text,
+  layout,
   options,
-  metrics,
   height,
   redrawKey,
+  showGlyphWidths,
   onRender,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !metrics) return;
-    const stats = drawSingleLine(text, canvas, options, metrics, height);
-    onRender(stats, metrics);
-  }, [text, options, metrics, height, redrawKey, onRender]);
+    if (!canvas || !layout) return;
+
+    const stats = drawLayout(layout, canvas, options, height, { showGlyphWidths });
+    onRender(stats);
+  }, [layout, options, height, redrawKey, showGlyphWidths, onRender]);
 
   return (
     <canvas

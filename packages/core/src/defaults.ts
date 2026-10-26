@@ -10,6 +10,7 @@ export const SANS_STACK = '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", san
 export const DEFAULT_LAYOUT_OPTIONS: LayoutOptions = Object.freeze({
   width: 592,
   fontFamily: SERIF_STACK,
+  fontWeight: 400,
   fontSize: 16,
   lineHeight: 1.9,
   letterSpacing: 0,

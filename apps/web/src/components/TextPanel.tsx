@@ -4,22 +4,34 @@ type Props = {
   text: string;
   chars: number;
   paragraphs: number;
+  lines: number;
   onChange: (text: string) => void;
   onExample: () => void;
   onClear: () => void;
   onRelayout: () => void;
   onNotice: (message: string) => void;
+  onStress: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 };
 
 export function TextPanel({
   text,
   chars,
   paragraphs,
+  lines,
   onChange,
   onExample,
   onClear,
   onRelayout,
   onNotice,
+  onStress,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo,
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,7 +56,7 @@ export function TextPanel({
       <div className="panel-head">
         <h2>文本</h2>
         <span className="meta">
-          {chars.toLocaleString("zh-CN")} 字 · {paragraphs} 段
+          {chars.toLocaleString("zh-CN")} 字 · {paragraphs} 段 · {lines} 行
         </span>
       </div>
 
@@ -81,8 +93,31 @@ export function TextPanel({
         <button type="button" className="chip" onClick={onClear}>
           清空
         </button>
+        <button type="button" className="chip" onClick={onStress} title="用 10 万字验证 Worker 与虚拟滚动">
+          10 万字
+        </button>
       </div>
       <div className="panel-foot tip-foot">
+        <div className="history-controls">
+          <button
+            type="button"
+            className="chip"
+            disabled={!canUndo}
+            onClick={onUndo}
+            title="撤销（Ctrl+Z）"
+          >
+            ↶ 撤销
+          </button>
+          <button
+            type="button"
+            className="chip"
+            disabled={!canRedo}
+            onClick={onRedo}
+            title="重做（Ctrl+Shift+Z / Ctrl+Y）"
+          >
+            ↷ 重做
+          </button>
+        </div>
         <div className="tip">
           <span>重新排版</span>
           <span>

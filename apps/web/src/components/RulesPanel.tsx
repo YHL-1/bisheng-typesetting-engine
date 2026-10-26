@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import type { Kinsoku, LayoutOptions } from "@typesetting-engine/core";
 import { MAX_WIDTH, MIN_WIDTH } from "../constants";
 import { FONT_OPTIONS } from "../fonts";
+import type { FontOption } from "../fonts";
 import type { RuleSettings } from "../rules";
 import { NumberField } from "./NumberField";
 import { Segmented } from "./Segmented";
@@ -9,7 +11,9 @@ import { Toggle } from "./Toggle";
 
 type Props = {
   settings: RuleSettings;
+  customFont: FontOption | null;
   onChange: (patch: Partial<RuleSettings>) => void;
+  onUploadFont: (file: File) => void;
   onReset: () => void;
 };
 
@@ -18,8 +22,7 @@ const STRATEGY_OPTIONS: ReadonlyArray<SegmentedOption<"greedy" | "knuth-plass">>
   {
     value: "knuth-plass",
     label: "Knuth-Plass",
-    disabled: true,
-    title: "P1 · D6 之后接入",
+    title: "总代价 DP：全段候选，末行免罚",
   },
 ];
 
@@ -35,7 +38,28 @@ const ALIGN_OPTIONS: ReadonlyArray<SegmentedOption<LayoutOptions["align"]>> = [
   { value: "center", label: "居中" },
 ];
 
-export function RulesPanel({ settings, onChange, onReset }: Props) {
+export function RulesPanel({
+  settings,
+  customFont,
+  onChange,
+  onUploadFont,
+  onReset,
+}: Props) {
+  const fontInputRef = useRef<HTMLInputElement>(null);
+  const fontOptions = customFont
+    ? [...FONT_OPTIONS, customFont]
+    : settings.fontId === "uploaded"
+      ? [
+          ...FONT_OPTIONS,
+          {
+            id: "uploaded",
+            label: "已上传字体（请重新上传）",
+            family: "serif",
+            probe: "serif",
+          },
+        ]
+      : FONT_OPTIONS;
+
   return (
     <aside className="panel right">
       <div className="panel-head">
@@ -53,11 +77,9 @@ export function RulesPanel({ settings, onChange, onReset }: Props) {
           <Segmented
             small
             label="断行策略"
-            value="greedy"
+            value={settings.strategy}
             options={STRATEGY_OPTIONS}
-            onChange={() => {
-              /* Knuth-Plass is disabled until P1. */
-            }}
+            onChange={(strategy) => onChange({ strategy })}
           />
         </section>
 
@@ -75,24 +97,21 @@ export function RulesPanel({ settings, onChange, onReset }: Props) {
           />
           <div className="hint">
             行首禁止：<span className="mono">，。、；：？！）</span>
-            <span className="hint-note"> · D2 起生效</span>
           </div>
         </section>
 
         <section className="group">
           <Toggle
             label="标点挤压"
-            description="行首 / 行尾 × ½ 字宽"
+            description="行首 / 行尾 / 连续标点 × ½ 字宽"
             checked={settings.squeeze}
             onChange={(squeeze) => onChange({ squeeze })}
-            title="D3 起生效"
           />
           <Toggle
             label="中西混排"
             description="中文与拉丁之间 ¼ em"
             checked={settings.autospace}
             onChange={(autospace) => onChange({ autospace })}
-            title="D3 起生效"
           />
         </section>
 
@@ -157,7 +176,7 @@ export function RulesPanel({ settings, onChange, onReset }: Props) {
                   value={settings.fontId}
                   onChange={(event) => onChange({ fontId: event.target.value })}
                 >
-                  {FONT_OPTIONS.map((option) => (
+                  {fontOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
@@ -165,6 +184,40 @@ export function RulesPanel({ settings, onChange, onReset }: Props) {
                 </select>
               </span>
             </label>
+            <label className="field full">
+              <span className="k">字重</span>
+              <span className="v">
+                <select
+                  value={settings.fontWeight}
+                  onChange={(event) => onChange({ fontWeight: Number(event.target.value) })}
+                >
+                  <option value={400}>400 · Regular</option>
+                  <option value={500}>500 · Medium</option>
+                  <option value={700}>700 · Bold</option>
+                </select>
+              </span>
+            </label>
+            <div className="field full font-upload">
+              <span className="k">上传字体</span>
+              <button
+                type="button"
+                className="chip"
+                onClick={() => fontInputRef.current?.click()}
+              >
+                选择 TTF / OTF
+              </button>
+              <input
+                ref={fontInputRef}
+                type="file"
+                accept=".ttf,.otf,font/ttf,font/otf"
+                hidden
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) onUploadFont(file);
+                  event.target.value = "";
+                }}
+              />
+            </div>
           </div>
         </section>
 

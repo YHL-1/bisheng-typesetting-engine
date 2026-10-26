@@ -34,8 +34,9 @@ export function useCanvasMetrics(
   font: string,
   probe: string,
   fontSize: number,
+  fontWeight?: number,
 ): CanvasMetricsState {
-  const fontSpec = fontString(fontSize, font);
+  const fontSpec = fontString(fontSize, font, fontWeight);
   const [state, setState] = useState<MetricsState>({
     metrics: null,
     check: null,
@@ -60,15 +61,15 @@ export function useCanvasMetrics(
 
       const metrics = createCanvasMetrics(fontSpec);
       const check = verifyGlyphWidth(metrics, fontSpec, "汉");
-      const available = document.fonts.check(fontString(fontSize, probe));
+      const available = document.fonts.check(fontString(fontSize, probe, fontWeight));
 
       if (import.meta.env.DEV) {
         console.info(
-          `[D1] metrics.width("汉")=${check.metric.toFixed(3)} · ctx.measureText=${check.measured.toFixed(3)} · Δ=${check.delta.toFixed(6)}px · ${fontSpec}`,
+          `[bisheng] metrics.width("汉")=${check.metric.toFixed(3)} · ctx.measureText=${check.measured.toFixed(3)} · Δ=${check.delta.toFixed(6)}px · ${fontSpec}`,
         );
         if (!available) {
           console.warn(
-            `[D1] ${probe} is not available; the canvas falls back to the next family in the stack.`,
+            `[bisheng] ${probe} is not available; the canvas falls back to the next family in the stack.`,
             result,
           );
         }
@@ -76,7 +77,7 @@ export function useCanvasMetrics(
 
       setState({ metrics, check, available, key: fontSpec });
     })().catch((error: unknown) => {
-      console.error("[D1] metrics init failed", error);
+      console.error("[bisheng] metrics init failed", error);
       if (alive) {
         setState({ metrics: null, check: null, available: false, key: fontSpec });
       }
@@ -85,7 +86,7 @@ export function useCanvasMetrics(
     return () => {
       alive = false;
     };
-  }, [fontSpec, probe, fontSize, epoch]);
+  }, [fontSpec, probe, fontSize, fontWeight, epoch]);
 
   const current = state.key === fontSpec;
 

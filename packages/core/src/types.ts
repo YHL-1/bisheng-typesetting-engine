@@ -10,6 +10,7 @@ export type Kinsoku = "off" | "basic" | "strict";
 export type LayoutOptions = {
   width: number;
   fontFamily: string;
+  fontWeight?: number;
   fontSize: number;
   lineHeight: number; // 倍数，如 1.8
   letterSpacing: number; // 额外字距，默认 0
@@ -42,8 +43,17 @@ export type Line = {
 export type BreakReason = {
   candidates: number[]; // 候选断点
   chosen: number; // 实际断点
-  cost: number; // 代价（贪心为 0）
+  cost: number; // 诊断归一化代价（贪心搜索本身为 0）
+  /** 代价构成，供诊断面板拆开显示。 */
+  costParts?: {
+    slack: number;
+    squeeze: number;
+    kinsoku: number;
+    overflow: number;
+  };
   blockedBy?: "kinsoku-start" | "kinsoku-end" | "overflow" | "word";
+  /** 字符下标：导致断点前移/硬断的那个字。 */
+  blockedAt?: number;
 };
 
 export type Diagnostic = {

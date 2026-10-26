@@ -10,9 +10,13 @@ pnpm-debug.log*
 .vite
 .vitest-cache
 .pnpm-store
+.dsh-office-*
 coverage
 *.tsbuildinfo
 
 # browser profile / cache dumps
 ui/
 Plan/
+
+# local-only text PDF experiment (large, ToUnicode still broken)
+docs/progress/downloads-text/

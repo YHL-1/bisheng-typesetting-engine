@@ -9,6 +9,8 @@ export type RuleSettings = {
   letterSpacing: number;
   indentChars: number;
   fontId: string;
+  fontWeight: number;
+  strategy: LayoutOptions["strategy"];
   kinsoku: Kinsoku;
   squeeze: boolean;
   autospace: boolean;
@@ -22,6 +24,8 @@ export const INITIAL_RULES: RuleSettings = {
   letterSpacing: DEFAULT_LAYOUT_OPTIONS.letterSpacing,
   indentChars: 2,
   fontId: FONT_OPTIONS[0]!.id,
+  fontWeight: 400,
+  strategy: DEFAULT_LAYOUT_OPTIONS.strategy,
   kinsoku: DEFAULT_LAYOUT_OPTIONS.kinsoku,
   squeeze: DEFAULT_LAYOUT_OPTIONS.squeeze,
   autospace: DEFAULT_LAYOUT_OPTIONS.autospace,

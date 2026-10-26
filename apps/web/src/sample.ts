@@ -1,7 +1,7 @@
 export const SAMPLE_TITLE = "中文排版的四件事";
 
 /**
- * Twelve paragraphs of demo copy (~3k characters) used for the D1 workbench.
+ * Twelve paragraphs of demo copy (~3k characters) used for the workbench.
  * The count is shown live in the text panel and the status bar.
  */
 export const SAMPLE_TEXT = `排版的本质，是把文字放进一个有限的框里，同时让读者感觉不到这个框的存在。字与字之间要呼吸，行与行之间要透气，标点则是呼吸里的停顿——短促、准确，不能含糊。好的版面不会让人注意到它的存在，只让人读得下去。反过来，糟糕的版面会不断提醒你：这里挤了，那里断了，这一行的最后一个字被硬生生拆成了两半。读者说不出哪里不对，但眼睛会累，读完一段就想放下。排版要做的，就是把这些“不对”提前消掉。这不是审美问题，而是计算问题：每一个字占多宽、每一行能放几个、断在哪里、剩下多少空间，都有数字可查。把这些数字算准，版面才有资格谈好看。数字不会说谎，版面也不会。算准了，才轮得到审美。这也是排版要先算后看的原因。
