@@ -1,4 +1,4 @@
-﻿# 毕昇 · 中文排版引擎
+# 毕昇 · 中文排版引擎
 
 把一段中文文字，按规则排进任意宽度的容器：断行、避头尾、标点挤压、中西混排、对齐、诊断，最后导出 PNG / JSON / PDF。
 
@@ -74,6 +74,30 @@ pnpm dlx vercel --prod
 - 无环境变量、无后端、无 API Key
 
 Vercel 控制台导入仓库时保持 Root Directory 为仓库根目录即可；也可以把 `apps/web/dist` 放到任意静态托管/OSS。当前仓库**尚未实际部署**（需要你的 Vercel/Netlify 账号）。
+
+### 国内访问：EdgeOne Pages
+
+仓库根目录还提供了 `edgeone.json`，可直接导入腾讯云 EdgeOne Pages：
+
+```json
+{
+  "buildCommand": "pnpm --filter web build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": "apps/web/dist",
+  "nodeVersion": "22.11.0"
+}
+```
+
+步骤：
+
+1. 在腾讯云购买域名并完成 **ICP 备案**（个人备案免费，通常 7–20 天）。
+2. 打开 [EdgeOne Pages 控制台](https://console.cloud.tencent.com/edgeone/makers)，导入 GitHub 仓库 `YHL-1/bisheng-typesetting-engine`。
+3. 框架选 `Vite`，加速区域选「中国大陆可用区」，构建命令/输出目录由 `edgeone.json` 覆盖。
+4. 部署成功后，项目域名只是 **3 小时有效的预览链接**，不要放进简历。
+5. 在「域名管理」绑定 `bisheng.你的域名.com`，按提示加 CNAME、申请免费证书。
+6. 备案通过 + 自定义域名生效后，才是稳定的国内访问地址。
+
+如果暂时没有备案域名：只能用 EdgeOne 预览链接（3 小时）或改用 Cloudflare Pages/Netlify 的 `*.pages.dev` / `*.netlify.app`（无需备案，但国内访问不保证稳定）。
 
 工作台操作：
 
