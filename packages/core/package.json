@@ -1,0 +1,15 @@
+{
+  "name": "@typesetting-engine/core",
+  "version": "0.0.1",
+  "private": true,
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3"
+  }
+}

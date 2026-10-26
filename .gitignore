@@ -1,0 +1,18 @@
+node_modules
+dist
+.idea
+.vscode
+*.log
+pnpm-debug.log*
+
+# local build / tool caches
+.cache
+.vite
+.vitest-cache
+.pnpm-store
+coverage
+*.tsbuildinfo
+
+# browser profile / cache dumps
+ui/
+Plan/
